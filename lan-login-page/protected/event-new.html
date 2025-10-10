@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Νέο Συμβάν</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/sidebar.css" />
+  <style>
+    .shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+    .content{padding:18px}
+    .card{max-width:900px;margin:0 auto}
+    .row{display:grid;gap:10px}
+    .row2{grid-template-columns:2fr 1fr}
+    .panel{display:grid;gap:12px;grid-template-columns:1fr 480px}
+    .videoWrap{position:relative;background:#0c201c;border:1px solid rgba(255,255,255,.1);border-radius:10px;display:grid;place-items:center;overflow:hidden;min-height:360px}
+    video{width:100%;height:auto;display:block}
+    .muted{opacity:.8}
+    .success{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.55);backdrop-filter:blur(2px)}
+    .success .box{background:#14332c;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:24px 28px;text-align:center}
+    .big{font-size:64px;line-height:1}
+    .guide{position:absolute;inset:0;pointer-events:none;display:grid;place-items:center;opacity:.9}
+    .guide .box{position:relative;width:min(80%, 520px);aspect-ratio:1/1;border-radius:10px}
+    .guide .corner{position:absolute;width:22px;height:22px;border:3px solid #7fd8c8}
+    .guide .corner.tl{top:-3px;left:-3px;border-right:none;border-bottom:none;border-top-left-radius:8px}
+    .guide .corner.tr{top:-3px;right:-3px;border-left:none;border-bottom:none;border-top-right-radius:8px}
+    .guide .corner.bl{bottom:-3px;left:-3px;border-right:none;border-top:none;border-bottom-left-radius:8px}
+    .guide .corner.br{bottom:-3px;right:-3px;border-left:none;border-top:none;border-bottom-right-radius:8px}
+    .guide .line{position:absolute;left:4px;right:4px;height:2px;background:#7fd8c8;border-radius:1px;box-shadow:0 0 8px rgba(127,216,200,.9)}
+    .guide.active .line{animation:scan 1.4s linear infinite}
+    @keyframes scan{0%{top:8%}100%{top:92%}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="side" id="sidebar"></aside>
+
+    <main class="content">
+      <section class="card">
+        <h1>Καταχώριση Συμβάντος</h1>
+        <p class="muted">1) Επιλέξτε τύπο συμβάντος → 2) Σαρώστε το QR.</p>
+
+        <div class="panel">
+          <div class="row">
+            <label for="evt">Τύπος συμβάντος</label>
+            <select id="evt" required disabled><option>Φόρτωση…</option></select>
+
+            <div class="row row2">
+              <button id="startBtn">Έναρξη κάμερας</button>
+              <button id="stopBtn" disabled>Παύση</button>
+            </div>
+
+            <label for="manual" class="muted">Εναλλακτικά: Εισαγωγή QR χειροκίνητα</label>
+            <input id="manual" placeholder="επικόλληση QR δεδομένων (προαιρετικό)" />
+            <button id="saveManual" class="btn-ghost">Καταχώριση χειροκίνητα</button>
+
+            <p id="msg" class="msg" aria-live="polite"></p>
+          </div>
+
+          <div class="videoWrap">
+            <video id="video" playsinline muted></video>
+            <div id="guide" class="guide">
+              <div class="box">
+                <div class="corner tl"></div><div class="corner tr"></div>
+                <div class="corner bl"></div><div class="corner br"></div>
+                <div class="line"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="success" class="success">
+    <div class="box">
+      <div class="big">✅</div>
+      <h2>Επιτυχής καταχώριση</h2>
+      <p id="succText" class="muted"></p>
+      <div style="margin-top:12px;display:flex;gap:10px;justify-content:center">
+        <a href="/dashboard"><button>Πίσω στον πίνακα</button></a>
+        <button id="againBtn">Νέα καταχώριση</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/sidebar.js"></script>
+  <script src="/lib/jsqr.js"></script>
+  <script src="/event-new.js"></script>
+</body>
+</html>

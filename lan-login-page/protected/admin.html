@@ -1,0 +1,28 @@
+<html lang="el">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Διαχειριστής — Προσθήκη χρήστη</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>.card{max-width:720px}.row{display:grid;gap:10px}.row3{grid-template-columns:1fr 1fr}</style>
+</head>
+<body>
+  <main class="page">
+    <section class="card">
+      <h1>Προσθήκη χρήστη</h1>
+      <form id="signupForm" class="row">
+        <input id="username" name="username" placeholder="Όνομα χρήστη" required />
+        <div class="row row3">
+          <input id="password" name="password" type="password" placeholder="Κωδικός" required />
+          <input id="confirm" type="password" placeholder="Επιβεβαίωση" required />
+        </div>
+        <input id="roles" name="roles" placeholder="Ρόλοι (π.χ. app:user,staff)" value="app:user" />
+        <button id="submitBtn" type="submit">Δημιουργία</button>
+        <p id="msg" class="msg" aria-live="polite"></p>
+      </form>
+      <p><a href="/dashboard">← Επιστροφή</a></p>
+    </section>
+  </main>
+  <script src="/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Προφίλ</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/sidebar.css" />
+  <style>
+    .shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+    .content{padding:18px}
+    .card{max-width:680px;margin:0 auto}
+    .row{display:grid;gap:10px}
+    .muted{opacity:.8}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="side" id="sidebar"></aside>
+
+    <main class="content">
+      <section class="card">
+        <h1>Το προφίλ μου</h1>
+        <p id="who" class="muted">—</p>
+        <h3>Αλλαγή κωδικού</h3>
+        <form id="pwdForm" class="row">
+          <input id="cur" type="password" placeholder="Τρέχων κωδικός (προαιρετικό)">
+          <input id="next" type="password" placeholder="Νέος κωδικός" required>
+          <div style="display:flex;gap:8px;justify-content:flex-end">
+            <a href="/dashboard"><button type="button">Πίσω</button></a>
+            <button type="submit">Ενημέρωση</button>
+          </div>
+          <p id="msg" class="msg"></p>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="/sidebar.js"></script>
+  <script>
+    (async()=>{
+      try{const r=await fetch('/me');const j=await r.json();document.getElementById('who').textContent=`${j.user?.name||''} — [${(j.user?.roles||[]).join(', ')}]`;}catch{}
+    })();
+    const f=document.getElementById('pwdForm'), msg=document.getElementById('msg');
+    f.addEventListener('submit', async (e)=>{
+      e.preventDefault(); msg.textContent='';
+      const body={current:cur.value,next:next.value};
+      const r=await fetch('/api/me/password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      const j=await r.json().catch(()=>({}));
+      if(r.ok&&j.ok){ msg.style.color='#b7f5c4'; msg.textContent='Ενημερώθηκε.'; f.reset(); } else { msg.textContent=j.message||'Αποτυχία.'; }
+    });
+  </script>
+</body>
+</html>

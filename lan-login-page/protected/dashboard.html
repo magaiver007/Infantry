@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/sidebar.css" />
+  <style>
+    .shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+    .content{padding:18px}
+    .card{max-width:1200px;margin:0 auto}
+    .chips{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+    .chip{padding:4px 8px;border-radius:30px;font-size:12px;border:1px solid rgba(255,255,255,.15)}
+    .chip.ok{background:#1f3c35}
+    .grid{border:1px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden;background:#132b26;margin-top:14px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    thead th{position:sticky;top:0;background:#17342e;font-weight:600}
+    th,td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;vertical-align:middle}
+    .toolbar{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin:10px 0}
+    .btn-ghost{border:1px solid rgba(255,255,255,.15);background:#1d3a33;border-radius:6px;padding:8px 10px;cursor:pointer}
+    .muted{opacity:.8}
+    .kv{width:100%}
+    .kv td:nth-child(1){width:260px;opacity:.9}
+    .section-title{margin-top:18px;margin-bottom:6px;font-weight:700}
+    .cols-2{display:grid;grid-template-columns:1fr;gap:24px}
+    @media(min-width:1100px){.cols-2{grid-template-columns:1fr 1fr}}
+    dialog{border:none;border-radius:10px;background:#14312a;color:inherit;max-width:640px}
+    dialog form{padding:14px}
+    dialog::backdrop{background:rgba(0,0,0,.45)}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="side" id="sidebar"></aside>
+
+    <main class="content">
+      <section class="card">
+        <h1>Database: <span id="dbName"></span></h1>
+        <p class="muted">Σύνοψη & εργαλεία διαχειριστή.</p>
+
+        <div class="chips">
+          <span class="chip" id="sizeChip">Size: —</span>
+          <span class="chip" id="docsChip"># Docs: —</span>
+          <span class="chip ok" id="onlineChip">Online: —</span>
+          <span class="chip ok" id="activeChip">Active: —</span>
+          <span class="chip" id="usersChip">Users: —</span>
+        </div>
+
+        <h3 class="section-title">Λεπτομέρειες βάσης</h3>
+        <div class="grid">
+          <table class="kv"><tbody id="detailsBody"></tbody></table>
+        </div>
+
+        <div class="cols-2">
+          <!-- Users Admin -->
+          <div>
+            <h3 class="section-title">Χρήστες</h3>
+            <div class="toolbar" id="adminTools" style="display:none">
+              <button id="btnAdd" class="btn-ghost">Προσθήκη</button>
+              <button id="btnRefresh" class="btn-ghost">Ανανέωση</button>
+            </div>
+            <div class="grid" id="usersGrid" style="display:none">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Username</th><th>Ονοματεπώνυμο</th><th>Email</th><th>Ρόλοι</th><th style="width:180px">Ενέργειες</th>
+                  </tr>
+                </thead>
+                <tbody id="usersBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Event Types Admin -->
+          <div>
+            <h3 class="section-title">Τύποι Συμβάντων</h3>
+            <div class="toolbar" id="typesTools" style="display:none">
+              <button id="btnTypeAdd" class="btn-ghost">Προσθήκη τύπου</button>
+              <button id="btnTypesRefresh" class="btn-ghost">Ανανέωση</button>
+            </div>
+            <div class="grid" id="typesGrid" style="display:none">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:160px">Code</th><th>Name</th><th style="width:120px">Active</th><th style="width:160px">Ενέργειες</th>
+                  </tr>
+                </thead>
+                <tbody id="typesBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="section-title">Δημιουργία QR Χρηστών</h3>
+        <div class="grid" id="qrSection" style="display:none">
+          <div style="padding:12px;display:grid;gap:10px;grid-template-columns:1fr 1fr;align-items:start">
+            <div style="display:grid;gap:10px">
+              <input id="qr_username" placeholder="username *" required />
+              <input id="qr_fullname" placeholder="full name" />
+              <input id="qr_employeeId" placeholder="employee id *" required />
+              <input id="qr_department" placeholder="department" />
+              <input id="qr_phone" placeholder="phone" />
+              <div style="display:flex;gap:8px">
+                <button id="qr_generate" class="btn-ghost">Generate</button>
+                <button id="qr_download" class="btn-ghost" disabled>Download PNG</button>
+                <button id="qr_print" class="btn-ghost" disabled>Print</button>
+              </div>
+              <p id="qr_msg" class="muted"></p>
+            </div>
+            <div style="display:grid;gap:10px;justify-items:center">
+              <img id="qr_preview" alt="QR preview" style="max-width:280px;border:1px solid rgba(255,255,255,.2);border-radius:8px;display:none"/>
+              <pre id="qr_payload" class="muted" style="white-space:pre-wrap;max-width:520px;word-break:break-word"></pre>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="section-title">Καταγραφές Συμβάντων</h3>
+        <div class="toolbar" id="logsToolbar">
+          <select id="logType" class="btn-ghost"><option value="">All types</option></select>
+          <input id="logUser" class="btn-ghost" placeholder="User (optional)" />
+          <button id="logRefresh" class="btn-ghost">Refresh</button>
+          <div style="flex:1"></div>
+          <button id="logPrev" class="btn-ghost" disabled>Prev</button>
+          <button id="logNext" class="btn-ghost" disabled>Next</button>
+        </div>
+        <div class="grid">
+          <table>
+            <thead><tr><th style="width:210px">Time</th><th style="width:160px">Type</th><th>QR</th><th style="width:180px">User</th></tr></thead>
+            <tbody id="logsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- User dialog -->
+  <dialog id="userDlg">
+    <form method="dialog" class="row">
+      <h3 id="dlgTitle">Add user</h3>
+      <input id="fUser" placeholder="username" required />
+      <div class="row" style="grid-template-columns:1fr 1fr;gap:10px">
+        <input id="fPass" type="password" placeholder="password" />
+        <input id="fPass2" type="password" placeholder="confirm password" />
+      </div>
+      <input id="fFullName" placeholder="full name (optional)" />
+      <div class="row" style="grid-template-columns:1fr 1fr;gap:10px">
+        <input id="fEmail" placeholder="email (optional)" />
+        <input id="fDept" placeholder="department (optional)" />
+      </div>
+      <div class="row" style="grid-template-columns:2fr 1fr;gap:10px">
+        <input id="fPhone" placeholder="phone (optional)" />
+        <input id="fRoles" placeholder="roles (comma separated)" />
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button value="cancel" class="btn-ghost">Cancel</button>
+        <button id="dlgOk" value="ok" class="btn-ghost">Save</button>
+      </div>
+      <p id="dlgMsg" class="muted"></p>
+    </form>
+  </dialog>
+
+  <!-- Event Type dialog -->
+  <dialog id="typeDlg">
+    <form method="dialog" class="row">
+      <h3 id="typeDlgTitle">Add type</h3>
+      <input id="tCode" placeholder="code (e.g., late, checkin2)" required />
+      <input id="tName" placeholder="display name (e.g., Late Arrival)" required />
+      <label style="display:flex;gap:8px;align-items:center">
+        <input type="checkbox" id="tActive" checked /> Active
+      </label>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button value="cancel" class="btn-ghost">Cancel</button>
+        <button id="typeDlgOk" value="ok" class="btn-ghost">Save</button>
+      </div>
+      <p id="typeDlgMsg" class="muted"></p>
+    </form>
+  </dialog>
+
+  <script src="/sidebar.js"></script>
+  <script src="/dashboard.js"></script>
+</body>
+</html>

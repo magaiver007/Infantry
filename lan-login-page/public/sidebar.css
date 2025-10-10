@@ -1,0 +1,10 @@
+.side{background:#0e2420;border-right:1px solid rgba(255,255,255,.06);padding:16px 12px}
+.nav{display:flex;flex-direction:column;gap:10px;height:100%}
+.item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:#14312a;text-decoration:none;color:inherit}
+.item:hover{filter:brightness(1.07)}
+.item.active{background:#1c3e34;border-color:rgba(255,255,255,.16)}
+.ico{font-size:28px;line-height:1}
+.lbl{font-size:16px;font-weight:600;letter-spacing:.2px}
+.spacer{flex:1}
+.logo{width:120px;height:auto;object-fit:contain;opacity:.95;align-self:center}
+.btn-reset{all:unset;display:flex;align-items:center;gap:12px;cursor:pointer;width:100%}

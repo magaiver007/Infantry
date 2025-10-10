@@ -1,0 +1,6 @@
+[
+  { "code": "checkin",  "name": "Check-in",  "active": true },
+  { "code": "checkout", "name": "Check-out", "active": true },
+  { "code": "break",    "name": "Break Start", "active": true },
+  { "code": "resume",   "name": "Break End",   "active": true }
+]

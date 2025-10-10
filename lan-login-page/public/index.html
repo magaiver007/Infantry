@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Σύνδεση</title>
+  <link rel="preload" href="/logo.png" as="image" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="card" aria-labelledby="t">
+      <img class="logo" src="/logo.png" alt="Λογότυπο" width="96" height="96" />
+      <h1 id="t">ΣΥΝΔΕΣΗ</h1>
+      <form id="loginForm">
+        <input id="username" name="username" placeholder="Όνομα χρήστη" required autofocus />
+        <input id="password" name="password" type="password" placeholder="Κωδικός πρόσβασης" required />
+        <button id="submitBtn" type="submit">Σύνδεση</button>
+        <p id="msg" class="msg" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
