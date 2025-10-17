@@ -3,11 +3,27 @@
   "version": "1.1.0",
   "private": true,
   "main": "server.js",
+  "bin": "server.js",
+  "engines": { "node": ">=18" },
+  "pkg": {
+    "targets": ["node18-win-x64"],
+    "scripts": [
+      "server.js",
+      "server/**/*.js"
+    ],
+    "assets": [
+      "public/**/*",
+      "protected/**/*",
+      "lib/**/*",
+      "certs/**/*"
+    ]
+  },
   "scripts": {
     "start": "node server.js",
-    "dev": "npx nodemon server.js",
+    "dev": "nodemon server.js",
     "seed:events": "node scripts/seed-event-types.js",
-    "get:jsqr": "node scripts/fetch-jsqr.js"
+    "get:jsqr": "node scripts/fetch-jsqr.js",
+    "build:exe": "npm ci && npm run get:jsqr && npx pkg . --out-path build"
   },
   "dependencies": {
     "axios": "^1.11.0",
